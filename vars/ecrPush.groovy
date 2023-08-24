@@ -1,5 +1,5 @@
 def call() {
-  sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c1l9p0p2'
-  sh "docker tag arun_custom_repo:latest public.ecr.aws/c1l9p0p2/arun_custom_repo:latest"
-  sh "docker push public.ecr.aws/c1l9p0p2/arun_custom_repo:latest"
+  sh 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 814200988517.dkr.ecr.us-west-2.amazonaws.com'
+  sh "docker tag my-app:1.0 814200988517.dkr.ecr.us-west-2.amazonaws.com/docker-images:latest"
+  sh "docker push 814200988517.dkr.ecr.us-west-2.amazonaws.com/docker-images:latest"
 }
