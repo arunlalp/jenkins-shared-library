@@ -7,7 +7,6 @@ This script demonstrates how to push a Docker image to an Amazon ECR Public repo
 ## Prerequisites
 
 1. Jenkins or any CI/CD tool set up with appropriate permissions to access AWS ECR Public and Docker.
-2. AWS CLI installed and configured with appropriate access credentials.
 
 ## Usage
 
