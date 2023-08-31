@@ -1,7 +1,7 @@
 def call() {
-  def ecrRepository = 'public.ecr.aws/c1l9p0p2'
-  def imageName = 'arun_custom_repo'
-  def imageTag = 'latest'
+  def ecrRepository = env.ECR_REPOSITORY
+  def imageName = env.IMAGE_NAME
+  def imageTag = env.IMAGE_TAG
   
   dockerLogin(ecrRepository)
   dockerTagAndPush(imageName, ecrRepository, imageTag)
@@ -19,4 +19,3 @@ def dockerTagAndPush(imageName, repository, imageTag) {
   sh "docker tag $sourceImage $targetImage"
   sh "docker push $targetImage"
 }
-
