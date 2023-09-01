@@ -1,7 +1,7 @@
 def call(Map params) {
-  def ecrRepository = params.ecrRepository ?: 'public.ecr.aws/c1l9p0p2'
-  def imageName = params.imageName ?: 'arun_custom_repo'
-  def imageTag = params.imageTag ?: 'latest'
+  def ecrRepository = params.ecrRepository 
+  def imageName = params.imageName 
+  def imageTag = params.imageTag 
   
   dockerLogin(ecrRepository)
   dockerTagAndPush(imageName, ecrRepository, imageTag)
