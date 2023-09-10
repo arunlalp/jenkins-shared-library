@@ -8,4 +8,5 @@ def terraformValidate(directory) {
    dir(directory) {
       def terraformValidateCommand = "terraform validate"
       sh terraformValidateCommand 
+   }   
 }
