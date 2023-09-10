@@ -8,7 +8,7 @@ def call(Map params) {
    terraformShow(projectDirectory, planFile, redirectPlanFile)
 }
 
-def terraformPlan(project_dir, var_file, plan_file,) {
+def terraformPlan(project_dir, var_file, plan_file) {
    dir(project_dir) {
       def terraformPlanCommand = "terraform plan -var-file=../../../vars/dev/$var_file -out $plan_file"
       sh terraformPlanCommand
