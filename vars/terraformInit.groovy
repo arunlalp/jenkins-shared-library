@@ -5,6 +5,8 @@ def call(Map params) {
 }
 
 def terraformInit(directory) {
-   def terraformInitCommand = "terraform init -chdir=$directory --reconfigure"
-   sh terraformInitCommand 
+   dir(directory) {
+      def terraformInitCommand = "terraform init --reconfigure"
+      sh terraformInitCommand 
+   }   
 }
