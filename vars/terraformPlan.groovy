@@ -17,7 +17,7 @@ def terraformPlan(project_dir, var_file, plan_file) {
 
 def terraformShow(project_dir, plan_file, redir_plan_file) {
    dir(project_dir) {
-      def terraformShowCommand = "terraform show $plan_file > $redir_plan_file"
+      def terraformShowCommand = "terraform show -json $plan_file | jq > $redir_plan_file"
       sh terraformShowCommand
    }   
 }
