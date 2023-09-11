@@ -1,6 +1,6 @@
 def call(Map params) {
    def projectDirectory = params.projectDirectory
-   def tflintConfig = LibraryResource "tflint/tflint.hcl"
+   def tflintConfig = libraryResource("tflint/tflint.hcl")
 
    tfLint(projectDirectory, tflintConfig)
 }
