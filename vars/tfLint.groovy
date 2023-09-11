@@ -1,12 +1,12 @@
 def call(Map params) {
    def projectDirectory = params.projectDirectory
+   def tflintConfig = LibraryResource "tflint/tflint.hcl"
 
-   tfLint(projectDirectory)
+   tfLint(projectDirectory, tflintConfig)
 }
 
-def tfLint(project_dir) {
+def tfLint(project_dir, tflintConfig) {
    dir(project_dir) {
-      def tflintConfig = "resources/tflint/tflint.hcl"
       writeFile file: '.tflint.hcl', text: tflintConfig
 
       def tfInitCommand = 'tflint --init'
