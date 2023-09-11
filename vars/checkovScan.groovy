@@ -8,8 +8,6 @@ def call(Map params) {
 }
 
 def checkovScan(project_dir, plan_file_json, external_check_dir, custom_policy) {
-   dir(project_dir) {
-      def checkovScanCommand = "checkov -f $plan_file_json --external-checks-dir $external_check_dir --check $custom_policy --hard-fail-on $custom_policy"
-      sh checkovScanCommand
-   }   
+   def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $external_check_dir --check $custom_policy --hard-fail-on $custom_policy"
+   sh checkovScanCommand   
 }
