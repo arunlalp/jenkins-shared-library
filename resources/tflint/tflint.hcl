@@ -2,7 +2,7 @@ config {
     module = true
     force = false
     disabled_by_default = false
-    varfile = ["../../../vars/dev/ec2.tfvars"]
+    varfile = [var.tfvars_file]
 }
 
 plugin "aws" {
