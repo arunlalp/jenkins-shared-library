@@ -2,7 +2,7 @@ def call(Map params) {
    def projectDirectory = params.projectDirectory
    def tflintConfig = libraryResource("tflint/tflint.hcl")
    
-   // Set the value of tfvars_file
+   // Set the value of tfvarsFile using the parameter
    def tfvarsFile = params.tfvarsFile
 
    tfLint(projectDirectory, tflintConfig, tfvarsFile)
