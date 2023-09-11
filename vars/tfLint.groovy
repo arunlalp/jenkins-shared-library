@@ -3,7 +3,7 @@ def call(Map params) {
    def tflintConfig = libraryResource("tflint/tflint.hcl")
    
    // Set the value of tfvars_file
-   def tfvarsFile = "../../../vars/dev/ec2.tfvars"
+   def tfvarsFile = params.tfvarsFile
 
    tfLint(projectDirectory, tflintConfig, tfvarsFile)
 }
