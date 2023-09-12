@@ -1,13 +1,14 @@
 def call(Map config) {
-    if (!config.subject || !config.body || !config.to) {
-        error("Required parameters (subject, body, and to) are missing.")
-    }
+    def subject = config.subject ?: "Terraform Pipeline Notification"
+    def body = config.body ?: "Terraform pipeline notification message."
+    def to = config.to ?: 'arunsample555@gmail.com'
+    def attachLog = config.attachLog ?: false
 
     emailext(
-        subject: config.subject,
-        body: config.body,
+        subject: subject,
+        body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
-        to: config.to,
-        attachLog: config.attachLog ?: false,
+        to: to,
+        attachLog: attachLog,
     )
 }
