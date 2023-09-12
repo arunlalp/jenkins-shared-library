@@ -1,5 +1,3 @@
-// emailNotification.groovy
-
 def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     def subject, body
 
@@ -10,7 +8,6 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         subject = "Terraform Pipeline Failed"
         body = "The Terraform pipeline has failed. Please investigate."
     } else {
-        // Handle other pipeline statuses as needed
         subject = "Terraform Pipeline Status: $pipelineStatus"
         body = "The Terraform pipeline is in an unknown status: $pipelineStatus"
     }
