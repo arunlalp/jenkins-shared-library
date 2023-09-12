@@ -1,13 +1,19 @@
 def call(Map successConfig = [:], Map failureConfig = [:]) {
-    def successSubject = successConfig.subject ?: "Terraform Pipeline Success"
-    def successBody = successConfig.body ?: "The Terraform pipeline has successfully completed."
-    def successTo = successConfig.to ?: 'arunsample555@gmail.com'
-    def successAttachLog = successConfig.attachLog ?: false
+    def defaultSubject = "Terraform Pipeline Notification"
+    def defaultTo = 'arunsample555@gmail.com'
+    def defaultAttachLog = false
 
-    def failureSubject = failureConfig.subject ?: "Terraform Pipeline Failed"
-    def failureBody = failureConfig.body ?: "The Terraform pipeline has failed. Please investigate."
-    def failureTo = failureConfig.to ?: 'arunsample555@gmail.com'
-    def failureAttachLog = failureConfig.attachLog ?: false
+    // Success email configuration
+    def successSubject = successConfig.subject ?: defaultSubject
+    def successBody = successConfig.body ?: "Terraform pipeline has successfully completed."
+    def successTo = successConfig.to ?: defaultTo
+    def successAttachLog = successConfig.attachLog ?: defaultAttachLog
+
+    // Failure email configuration
+    def failureSubject = failureConfig.subject ?: defaultSubject
+    def failureBody = failureConfig.body ?: "Terraform pipeline has failed. Please investigate."
+    def failureTo = failureConfig.to ?: defaultTo
+    def failureAttachLog = failureConfig.attachLog ?: defaultAttachLog
 
     post {
         success {
