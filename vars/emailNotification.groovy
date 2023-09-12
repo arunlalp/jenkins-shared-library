@@ -5,10 +5,10 @@ def call(Map params) {
     def attachLog = params.attachLog ?: false
 
     def emailext(
-        subject: subject,
-        body: body,
+        subject: $subject,
+        body: $body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
-        to: to,
-        attachLog: attachLog,
+        to: $to,
+        attachLog: $attachLog,
     )
 }
