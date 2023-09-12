@@ -2,20 +2,20 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     def subject, body
 
     if (pipelineStatus == 'success') {
-        subject = "Terraform Pipeline Success"
-        body = "The Terraform pipeline has successfully completed."
+        subject = "Pipeline Success"
+        body = "The pipeline has successfully completed."
     } else if (pipelineStatus == 'failure') {
-        subject = "Terraform Pipeline Failed"
-        body = "The Terraform pipeline has failed. Please investigate."
+        subject = "Pipeline Failed"
+        body = "The pipeline has failed. Please investigate."
     } else {
-        subject = "Terraform Pipeline Status: $pipelineStatus"
-        body = "The Terraform pipeline is in an unknown status: $pipelineStatus"
+        subject = "Pipeline Status: $pipelineStatus"
+        body = "The pipeline is in an unknown status: $pipelineStatus"
     }
 
     emailext(
         subject: subject,
         body: body,
-        recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
         attachLog: true
     )
