@@ -1,18 +1,25 @@
-def call(Map<String, String> params) {
-    def subject = params.subject
-    def body = params.body
-    def to = params.to
-    def attachLog = params.attachLog ?: false
+// emailNotification.groovy
 
-    emailNotification(subject, body, to, attachLog)
-}    
+def sendEmailNotification(String pipelineStatus, String recipientEmail) {
+    def subject, body
 
-def emailNotification(subject, body, to, attachLog) {
-    emailtext(
+    if (pipelineStatus == 'success') {
+        subject = "Terraform Pipeline Success"
+        body = "The Terraform pipeline has successfully completed."
+    } else if (pipelineStatus == 'failure') {
+        subject = "Terraform Pipeline Failed"
+        body = "The Terraform pipeline has failed. Please investigate."
+    } else {
+        // Handle other pipeline statuses as needed
+        subject = "Terraform Pipeline Status: $pipelineStatus"
+        body = "The Terraform pipeline is in an unknown status: $pipelineStatus"
+    }
+
+    emailext(
         subject: subject,
         body: body,
-        to: to
+        recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+        to: recipientEmail,
+        attachLog: true
     )
 }
-   
-    
