@@ -1,10 +1,10 @@
-def call(Map config) {
-    def subject = config.subject ?: "Terraform Pipeline Notification"
-    def body = config.body ?: "Terraform pipeline notification message."
-    def to = config.to ?: 'arunsample555@gmail.com'
-    def attachLog = config.attachLog ?: false
+def call(Map params) {
+    def subject = params.subject
+    def body = params.body
+    def to = params.to
+    def attachLog = params.attachLog ?: false
 
-    emailext(
+    def emailext(
         subject: subject,
         body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
