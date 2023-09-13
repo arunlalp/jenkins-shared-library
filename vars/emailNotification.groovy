@@ -12,11 +12,15 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         body = "The pipeline is in an unknown status: $pipelineStatus"
     }
 
-    emailext(
-        subject: subject "${env.BUILD_NUMBER}",
-        body: body,
-        recipientProviders: [[$class: 'DevelopersRecipientProvider']],
-        to: recipientEmail,
-        attachLog: true
+    def email = emailext(
+        subject: "${PROJECT_NAME} - ${BUILD_NUMBER}",
+        body:  """<html><body>
+                    <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
+                    <pre>
+                    ${readFile(reportPath)}
+                    </pre>
+                </body></html>""",
+        to: "${recipientEmail}",
     )
+    
 }
