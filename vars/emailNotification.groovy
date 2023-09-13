@@ -43,4 +43,4 @@ def pipelineStatus = 'failure' // Set the pipeline status
 def recipientEmail = 'recipient@example.com' // Set the recipient email
 
 // Call the sendEmailNotification function
-sendEmailNotification(pipelineStatus, recipientEmail)
+// sendEmailNotification(pipelineStatus, recipientEmail)
