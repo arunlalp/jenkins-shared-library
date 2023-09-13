@@ -13,14 +13,11 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     }
 
     def email = emailext(
-        subject: "${PROJECT_NAME} - ${BUILD_NUMBER}",
-        body:  """<html><body>
-                    <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
-                    <pre>
-                    ${readFile(reportPath)}
-                    </pre>
-                </body></html>""",
-        to: "${recipientEmail}",
+        subject: "${BUILD_NUMBER}",
+        body:  body,
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+        to: recipientEmail,
+        attachLog: true
     )
     
 }
