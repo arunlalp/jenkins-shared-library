@@ -1,19 +1,26 @@
-def sendEmailNotification(String pipelineStatus, String recipientEmail) {
+def sendEmailNotification(String logText, String recipientEmail) {
     def subject, body
 
-    if (pipelineStatus == 'SUCCESS') {
+    if (logText.contains("Failed checks: 2")) {
+        subject = "Pipeline Failed"
+        body = "The pipeline has failed. Details:\n\n"
+        
+        // Split the log into lines
+        def lines = logText.split('\n')
+        
+        // Iterate through the lines to find the failed checks and their guides
+        for (line in lines) {
+            if (line.contains("FAILED for resource")) {
+                body += "\nFailed Check: ${line.trim()}"
+                def guideIndex = lines.indexOf(line) + 1
+                if (guideIndex < lines.size() && lines[guideIndex].startsWith("Guide:")) {
+                    body += "\n${lines[guideIndex].trim()}"
+                }
+            }
+        }
+    } else {
         subject = "Pipeline Success"
         body = "The pipeline has successfully completed."
-    } else if (pipelineStatus == 'FAILURE') {
-        // Extract the failure reason from the pipeline log
-        def buildLog = currentBuild.rawBuild.getLog(1000)
-        def failureReason = extractFailureReason(buildLog)
-
-        subject = "Pipeline Failed"
-        body = "The pipeline has failed with the following reason:\n\n$failureReason\n\nPlease investigate."
-    } else {
-        subject = "Pipeline Status: $pipelineStatus"
-        body = "The pipeline is in an unknown status: $pipelineStatus"
     }
 
     emailext(
@@ -23,26 +30,4 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         to: recipientEmail,
         attachLog: true
     )
-}
-
-def extractFailureReason(log) {
-    def failureReason = ""
-    def logLines = log.readLines()
-
-    // Search for "Failed checks: 0" in the log
-    if (logLines.find { it.contains("Failed checks: 0") }) {
-        failureReason = "No check failures detected."
-    } else {
-        // Search for "FAILED for resource:" and "Guide:" in the log
-        def resourceFailed = logLines.find { it.contains("FAILED for resource:") }
-        def guide = logLines.find { it.contains("Guide:") }
-
-        if (resourceFailed && guide) {
-            failureReason = "Resource Failed: $resourceFailed\nGuide: $guide"
-        } else {
-            failureReason = "Unknown failure reason. Please check the pipeline log."
-        }
-    }
-
-    return failureReason
 }
