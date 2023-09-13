@@ -13,15 +13,18 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
             consoleLog = currentBuild.rawBuild.getLog(1000)
         }
 
-        // Find the third line starting with 'FAILED for resource:'
-        def failedLines = []
-        consoleLog.each { line ->
-            if (line.contains('FAILED for resource:')) {
-                failedLines.add(line)
-                if (failedLines.size() == 3) {
-                    body += "\n\nConsole Log (Third line starting with 'FAILED for resource:'):\n${failedLines[2]}"
-                }
+        // Find the line starting with 'FAILED for resource:'
+        def failedLineIndex = -1
+        consoleLog.eachWithIndex { line, index ->
+            if (line.startsWith('FAILED for resource:')) {
+                failedLineIndex = index
             }
+        }
+
+        // If a 'FAILED for resource:' line is found, grab the line starting with 'Guide:'
+        if (failedLineIndex != -1 && failedLineIndex + 1 < consoleLog.size()) {
+            def guideLine = consoleLog[failedLineIndex + 1]
+            body += "\n\nConsole Log (Line starting with 'Guide:'):\n$guideLine"
         }
     } else {
         subject = "Pipeline Status: $pipelineStatus"
