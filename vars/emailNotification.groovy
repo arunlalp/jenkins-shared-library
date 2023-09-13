@@ -5,7 +5,7 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         subject = "Pipeline Success: ${PROJECT_NAME} - ${BUILD_NUMBER}"
         body = "The pipeline has successfully completed."
     } else if (pipelineStatus == 'failure') {
-        subject = "Pipeline Failed"
+        subject = "Pipeline Failed: ${PROJECT_NAME} - ${BUILD_NUMBER}"
         body = "The pipeline has failed. Please investigate."
     } else {
         subject = "Pipeline Status: $pipelineStatus"
