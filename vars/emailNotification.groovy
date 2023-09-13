@@ -1,11 +1,11 @@
-def sendEmailNotification(String pipelineStatus, String recipientEmail, String PROJECT_NAME, String BUILD_NUMBER) {
+def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     def subject, body
 
     if (pipelineStatus == 'success') {
-        subject = "Pipeline Success: ${PROJECT_NAME} - ${BUILD_NUMBER}"
+        subject = "Pipeline Success"
         body = "The pipeline has successfully completed."
     } else if (pipelineStatus == 'failure') {
-        subject = "Pipeline Failed: ${PROJECT_NAME} - ${BUILD_NUMBER}"
+        subject = "Pipeline Failed"
         body = "The pipeline has failed. Please investigate."
     } else {
         subject = "Pipeline Status: $pipelineStatus"
@@ -13,7 +13,7 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail, String P
     }
 
     emailext(
-        subject: subject,
+        subject: subject "${PROJECT_NAME} - ${BUILD_NUMBER}",
         body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
