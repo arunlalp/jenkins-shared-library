@@ -13,7 +13,7 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     }
 
     emailext(
-        subject: subject "${PROJECT_NAME} - ${BUILD_NUMBER}",
+        subject: subject "${env.BUILD_NUMBER}",
         body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
