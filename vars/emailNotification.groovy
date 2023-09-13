@@ -1,26 +1,33 @@
-def sendEmailNotification(String logText, String recipientEmail) {
+def sendEmailNotification(log, pipelineStatus, recipientEmail) {
     def subject, body
 
-    if (logText.contains("Failed checks: 2")) {
+    if (pipelineStatus == 'success') {
+        subject = "Pipeline Success"
+        body = "The pipeline has successfully completed."
+    } else if (pipelineStatus == 'failure') {
         subject = "Pipeline Failed"
-        body = "The pipeline has failed. Details:\n\n"
+        body = "The pipeline has failed. Please investigate.\n\n"
         
-        // Split the log into lines
-        def lines = logText.split('\n')
-        
-        // Iterate through the lines to find the failed checks and their guides
-        for (line in lines) {
-            if (line.contains("FAILED for resource")) {
-                body += "\nFailed Check: ${line.trim()}"
-                def guideIndex = lines.indexOf(line) + 1
-                if (guideIndex < lines.size() && lines[guideIndex].startsWith("Guide:")) {
-                    body += "\n${lines[guideIndex].trim()}"
+        // Check if the log contains "Failed checks: 2"
+        if (log.contains("Failed checks: 2")) {
+            // Split the log by "Check:" to extract individual checks
+            def checks = log.split("Check:")
+            
+            // Loop through the checks to find failed checks
+            checks.each { check ->
+                if (check.contains("FAILED for resource")) {
+                    // Extract the failed resource and guide information
+                    def failedResource = check.substringAfter("FAILED for resource:").trim()
+                    def guide = check.substringAfter("Guide:").trim()
+                    
+                    // Add the failed resource and guide information to the email body
+                    body += "FAILED for resource: $failedResource\nGuide: $guide\n\n"
                 }
             }
         }
     } else {
-        subject = "Pipeline Success"
-        body = "The pipeline has successfully completed."
+        subject = "Pipeline Status: $pipelineStatus"
+        body = "The pipeline is in an unknown status: $pipelineStatus"
     }
 
     emailext(
