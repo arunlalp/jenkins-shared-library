@@ -6,10 +6,6 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         body = """<html>
                     <body>
                         <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
-                        <pre>
-                        ${readFile(reportPath)}
-                        </pre>
-                        <p>The pipeline has successfully completed.</p>
                     </body>
                 </html>"""
     } else if (pipelineStatus == 'failure') {
@@ -17,10 +13,6 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         body = """<html>
                     <body>
                         <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
-                        <pre>
-                        ${readFile(reportPath)}
-                        </pre>
-                        <p>The pipeline has failed. Please investigate.</p>
                     </body>
                 </html>"""
     } else {
@@ -28,10 +20,6 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         body = """<html>
                     <body>
                         <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
-                        <pre>
-                        ${readFile(reportPath)}
-                        </pre>
-                        <p>The pipeline is in an unknown status: $pipelineStatus</p>
                     </body>
                 </html>"""
     }
