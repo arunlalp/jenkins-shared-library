@@ -1,4 +1,4 @@
-def sendEmailNotification(String pipelineStatus, String recipientEmail) {
+def sendEmailNotification(String pipelineStatus, String recipientEmail, String PROJECT_NAME, String BUILD_NUMBER) {
     def subject, body
 
     if (pipelineStatus == 'success') {
