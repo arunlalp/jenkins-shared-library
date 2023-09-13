@@ -13,9 +13,9 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
             consoleLog = currentBuild.rawBuild.getLog(1000)
         }
         
-        def checkLine = consoleLog.find { line -> line.startsWith('Check') }
+        def checkLine = consoleLog.find { line -> line.startsWith('Check:') }
         if (checkLine) {
-            body += "\n\nConsole Log (Line starting with 'Check'):\n$checkLine"
+            body += "\n\nConsole Log (Line starting with 'Check:'):\n$checkLine"
         }
     } else {
         subject = "Pipeline Status: $pipelineStatus"
