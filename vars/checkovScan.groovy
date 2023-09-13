@@ -8,10 +8,8 @@ def call(Map params) {
       def checkovInit = libraryResource 'checkov_policy/__init__.py'
       writeFile file: '/home/ubuntu/custom_checks/__init__.py', text: checkovInit
    
-   checkovScan(projectDirectory, planFileJson, externalCheckDir, customPolicy)
-}
-
-def checkovScan(project_dir, plan_file_json, external_check_dir, custom_policy) {
    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $external_check_dir --check '/home/ubuntu/custom_checks' --hard-fail-on $custom_policy"
    sh checkovScanCommand   
 }
+
+
