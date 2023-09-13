@@ -8,15 +8,20 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         subject = "Pipeline Failed"
         body = "The pipeline has failed. Please investigate."
 
-        // Capture the console output and search for a line starting with 'Check'
+        // Capture the console output
         script {
             consoleLog = currentBuild.rawBuild.getLog(1000)
         }
-        
-        def linesContainingFailed = consoleLog.findAll { line -> line.contains('FAILED for resource:') }
-        if (linesContainingFailed.size() >= 3) {
-            def thirdLine = linesContainingFailed[2] // Index 2 for the third line (0-based index)
-            body += "\n\nConsole Log (Third line containing 'FAILED for resource:'):\n$thirdLine"
+
+        // Find the third line starting with 'FAILED for resource:'
+        def failedLines = []
+        consoleLog.each { line ->
+            if (line.contains('FAILED for resource:')) {
+                failedLines.add(line)
+                if (failedLines.size() == 3) {
+                    body += "\n\nConsole Log (Third line starting with 'FAILED for resource:'):\n${failedLines[2]}"
+                }
+            }
         }
     } else {
         subject = "Pipeline Status: $pipelineStatus"
@@ -28,7 +33,7 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
-        attachLog: false // We won't attach the log here
+        attachLog: false // We won't attach the full log here
     )
 
     // Save the console output to a file
