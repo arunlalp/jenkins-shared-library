@@ -1,16 +1,5 @@
-// Create a StringWriter to capture console output
-def sw = new StringWriter()
-def pw = new PrintWriter(sw)
-
-// Redirect console output to the StringWriter
-System.setOut(pw)
-
-// Your existing sendEmailNotification function
 def sendEmailNotification(String pipelineStatus, String recipientEmail) {
-    def subject, body, logContent
-
-    // Capture console output
-    def consoleOutput = sw.toString()
+    def subject, body
 
     if (pipelineStatus == 'success') {
         subject = "Pipeline Success"
@@ -18,29 +7,26 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     } else if (pipelineStatus == 'failure') {
         subject = "Pipeline Failed"
         body = "The pipeline has failed. Please investigate."
-
-        // Extract lines starting with 'FAILED for resource:'
-        def failedLines = consoleOutput.split('\n').findAll { it.startsWith('FAILED for resource:') }
-        logContent = failedLines.join('\n') // Join the failed lines into a single string
     } else {
         subject = "Pipeline Status: $pipelineStatus"
         body = "The pipeline is in an unknown status: $pipelineStatus"
     }
+
+    def logFilePath = '/var/lib/jenkins/consolelog.txt'
+    def logFile = new File(logFilePath)
+    logFile.text = '' // Clear the log file if it exists
+
+    // Redirect console output to both the console and the log file
+    def consoleOutput = new StringWriter()
+    System.setOut(new PrintStream(new TeeOutputStream(System.out, logFile.outputStream())))
+    System.setErr(new PrintStream(new TeeOutputStream(System.err, logFile.outputStream())))
 
     emailext(
         subject: subject,
         body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
-        attachLog: true,
-        attachmentsPattern: "scanmail.txt", // Attach the console output file
-        msg: logContent // Attach the failed lines to the email
+        attachLog: false // Set this to false because we are manually redirecting the console output
     )
 }
 
-// Your pipeline logic here
-def pipelineStatus = 'failure' // Set the pipeline status
-def recipientEmail = 'recipient@example.com' // Set the recipient email
-
-// Call the sendEmailNotification function
-// sendEmailNotification(pipelineStatus, recipientEmail)
