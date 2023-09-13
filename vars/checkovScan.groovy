@@ -1,7 +1,7 @@
 def call(Map params) {
    def projectDirectory = params.projectDirectory
    def planFileJson = params.planFileJson
-   def checkovPolicy = libraryResource("checkov_policy")
+   def checkovPolicy = libraryResource("checkov_policy/*.py")
    def customPolicy = params.customPolicy
 
    checkovScan(projectDirectory, planFileJson, checkovPolicy, customPolicy)
