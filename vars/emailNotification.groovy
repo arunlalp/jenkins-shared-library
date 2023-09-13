@@ -3,21 +3,45 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
 
     if (pipelineStatus == 'success') {
         subject = "Pipeline Success"
-        body = "The pipeline has successfully completed."
+        body = """<html>
+                    <body>
+                        <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
+                        <pre>
+                        ${readFile(reportPath)}
+                        </pre>
+                        <p>The pipeline has successfully completed.</p>
+                    </body>
+                </html>"""
     } else if (pipelineStatus == 'failure') {
         subject = "Pipeline Failed"
-        body = "The pipeline has failed. Please investigate."
+        body = """<html>
+                    <body>
+                        <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
+                        <pre>
+                        ${readFile(reportPath)}
+                        </pre>
+                        <p>The pipeline has failed. Please investigate.</p>
+                    </body>
+                </html>"""
     } else {
         subject = "Pipeline Status: $pipelineStatus"
-        body = "The pipeline is in an unknown status: $pipelineStatus"
+        body = """<html>
+                    <body>
+                        <p>Click <a href="${BUILD_URL}">here</a> to view the build details.</p>
+                        <pre>
+                        ${readFile(reportPath)}
+                        </pre>
+                        <p>The pipeline is in an unknown status: $pipelineStatus</p>
+                    </body>
+                </html>"""
     }
 
-    def email = emailext(
-        subject: "${BUILD_NUMBER}",
-        body:  body,
+    emailext(
+        subject: subject,
+        body: body,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']],
         to: recipientEmail,
+        mimeType: 'text/html', // Set the content type to HTML
         attachLog: true
     )
-    
 }
