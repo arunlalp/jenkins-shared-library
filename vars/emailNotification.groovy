@@ -13,9 +13,10 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
             consoleLog = currentBuild.rawBuild.getLog(1000)
         }
         
-        def checkLine = consoleLog.find { line -> line.contains('FAILED for resource:') }
-        if (checkLine) {
-            body += "\n\nConsole Log 'FAILED for resource:'):\n$checkLine"
+        def linesContainingFailed = consoleLog.findAll { line -> line.contains('FAILED for resource:') }
+        if (linesContainingFailed.size() >= 3) {
+            def thirdLine = linesContainingFailed[2] // Index 2 for the third line (0-based index)
+            body += "\n\nConsole Log (Third line containing 'FAILED for resource:'):\n$thirdLine"
         }
     } else {
         subject = "Pipeline Status: $pipelineStatus"
