@@ -1,5 +1,5 @@
 def sendEmailNotification(String pipelineStatus, String recipientEmail) {
-    def subject, body
+    def subject, body, consoleLog
 
     if (pipelineStatus == 'success') {
         subject = "Pipeline Success"
@@ -7,6 +7,16 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
     } else if (pipelineStatus == 'failure') {
         subject = "Pipeline Failed"
         body = "The pipeline has failed. Please investigate."
+
+        // Capture the console output and search for a line starting with 'Check'
+        script {
+            consoleLog = currentBuild.rawBuild.getLog(1000)
+        }
+        
+        def checkLine = consoleLog.find { line -> line.startsWith('Check') }
+        if (checkLine) {
+            body += "\n\nConsole Log (Line starting with 'Check'):\n$checkLine"
+        }
     } else {
         subject = "Pipeline Status: $pipelineStatus"
         body = "The pipeline is in an unknown status: $pipelineStatus"
@@ -20,9 +30,6 @@ def sendEmailNotification(String pipelineStatus, String recipientEmail) {
         attachLog: false // We won't attach the log here
     )
 
-    // Capture the console output and save it to a file
-    script {
-        def consoleLog = currentBuild.rawBuild.getLog(1000)
-        writeFile file: '/var/lib/jenkins/consolelog.txt', text: consoleLog
-    }
+    // Save the console output to a file
+    writeFile file: '/var/lib/jenkins/consolelog.txt', text: consoleLog
 }
