@@ -9,7 +9,7 @@ def call(Map params) {
 
     // Write the policy contents to files in your workspace
     writeFile file: "${env.WORKSPACE}/security_group_policy.py", text: securityGroupPolicyContent
-    writeFile file: "${env.WORKSPACE}/init_policy.py", text: initPolicyContent
+    writeFile file: "${env.WORKSPACE}/__init__.py", text: initPolicyContent
 
     checkovScan(projectDirectory, planFileJson, customPolicy)
 }
