@@ -12,11 +12,11 @@ def call(Map params) {
    // Copy the policies from the library to the temporary directory
    sh "cp -r $externalCheckDir/* $tempCheckovDir/"
    
-   checkovScan(planFileJson, tempCheckovDir, customPolicy)
+   checkovScan(projectDirectory, planFileJson, tempCheckovDir, customPolicy)
 }
 
-def checkovScan(plan_file_json, external_check_dir, custom_policy) {
+def checkovScan(project_dir, plan_file_json, external_check_dir, custom_policy) {
    // Specify the path to the temporary Checkov policies directory and custom policy in the command
-   def checkovScanCommand = "checkov -f $plan_file_json --external-checks-dir $external_check_dir --check $custom_policy"
+   def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $external_check_dir --check $custom_policy"
    sh checkovScanCommand   
 }
