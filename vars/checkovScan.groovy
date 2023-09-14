@@ -6,11 +6,17 @@ def call(Map params) {
    // Load Checkov policies directory from library resource
    def externalCheckDir = libraryResource("checkov_policy")
    
-   checkovScan(projectDirectory, planFileJson, externalCheckDir, customPolicy)
+   // Create a temporary directory in the workspace
+   def tempCheckovDir = checkout([$class: 'WorkspaceCleanup', deleteDirs: ['checkov_temp']])
+   
+   // Copy the policies from the library to the temporary directory
+   sh "cp -r $externalCheckDir/* $tempCheckovDir/"
+   
+   checkovScan(planFileJson, tempCheckovDir, customPolicy)
 }
 
-def checkovScan(project_dir, plan_file_json, external_check_dir, custom_policy) {
-   // Specify the path to the Checkov policies directory and custom policy in the command
-   def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $external_check_dir --check $custom_policy"
+def checkovScan(plan_file_json, external_check_dir, custom_policy) {
+   // Specify the path to the temporary Checkov policies directory and custom policy in the command
+   def checkovScanCommand = "checkov -f $plan_file_json --external-checks-dir $external_check_dir --check $custom_policy"
    sh checkovScanCommand   
 }
