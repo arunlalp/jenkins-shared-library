@@ -20,7 +20,7 @@ def call(Map params) {
 
 def checkovScan(project_dir, plan_file_json, custom_policy, checkov_policy_dir) {
     def checkovReportFile = "${env.WORKSPACE}/checkov-report.html"
-    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $checkov_policy_dir --check $custom_policy --hard-fail-on $custom_policy --report-file $checkovReportFile"
+    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $checkov_policy_dir --check $custom_policy --hard-fail-on $custom_policy --output-file-path $checkovReportFile"
     sh checkovScanCommand
 
     // Copy the HTML report to the workspace
