@@ -21,24 +21,6 @@ def call(Map params) {
 def checkovScan(project_dir, plan_file_json, custom_policy, checkov_policy_dir) {
     def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $checkov_policy_dir --check $custom_policy --output json > checkov-report.json"
     sh checkovScanCommand
-
-    // Read the JSON report
-    def jsonReport = readFile(file: 'checkov-report.json')
-    
-    // Convert JSON to a Groovy map
-    def reportMap = new groovy.json.JsonSlurper().parseText(jsonReport)
-
-    // Generate an HTML table from the report
-    def htmlTable = "<table border='1'><tr><th>Check</th><th>File</th><th>Resource</th><th>Line</th><th>Message</th></tr>"
-    
-    reportMap.each { issue ->
-        htmlTable += "<tr><td>${issue.check_name}</td><td>${issue.file_path}</td><td>${issue.resource}</td><td>${issue.line}</td><td>${issue.check_name}</td></tr>"
-    }
-    
-    htmlTable += "</table>"
-
-    // Write the HTML table to a file
-    writeFile file: 'checkov-report.html', text: htmlTable
 }
 
 
