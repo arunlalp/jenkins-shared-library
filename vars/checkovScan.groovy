@@ -1,19 +1,21 @@
 def call(Map params) {
-   def projectDirectory = params.projectDirectory
-   def planFileJson = params.planFileJson
-   def customPolicy = params.customPolicy
+    def projectDirectory = params.projectDirectory
+    def planFileJson = params.planFileJson
+    def customPolicy = params.customPolicy
 
-   // Load Checkov policies directory from library resource
-   def externalCheckDir = libraryResource("checkov_policy")
+    // Define a temporary directory to copy the checkov policies
+    def tempCheckovDir = "${env.WORKSPACE}/temp_checkov_policies"
 
-   // Modify the external policies directory path to include the full Jenkins workspace path
-   def modifiedExternalCheckDir = "${workspace}/$externalCheckDir"
+    // Copy the checkov policies from the shared library resources to the temporary directory
+    sh "mkdir -p $tempCheckovDir"
+    libraryResource('checkov_policies').copyTo(tempCheckovDir)
 
-   checkovScan(projectDirectory, planFileJson, modifiedExternalCheckDir, customPolicy)
+    // Run the checkovScan with the temporary checkov policies directory
+    checkovScan(projectDirectory, planFileJson, customPolicy, tempCheckovDir)
 }
 
-def checkovScan(project_dir, plan_file_json, external_check_dir, custom_policy) {
-   // Specify the path to the modified external Checkov policies directory and custom policy in the command
-   def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $external_check_dir --check $custom_policy"
-   sh checkovScanCommand   
+def checkovScan(project_dir, plan_file_json, custom_policy, checkov_policies_dir) {
+    // Use the absolute path to the temporary checkov policies directory
+    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $checkov_policies_dir --check $custom_policy --hard-fail-on $custom_policy"
+    sh checkovScanCommand
 }
