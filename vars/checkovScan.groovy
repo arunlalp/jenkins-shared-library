@@ -4,7 +4,7 @@ def call(Map params) {
    def customPolicy = params.customPolicy
 
    // Load Checkov policies directory from library resource
-   def externalCheckDir = libraryResource("checkov_policies")
+   def externalCheckDir = libraryResource("checkov_policy")
    
    checkovScan(projectDirectory, planFileJson, externalCheckDir, customPolicy)
 }
