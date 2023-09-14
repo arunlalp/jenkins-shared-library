@@ -7,10 +7,11 @@ def call(Map params) {
    def externalCheckDir = libraryResource("checkov_policy")
    
    // Create a temporary directory in the workspace
-   def tempCheckovDir = checkout([$class: 'WorkspaceCleanup', deleteDirs: ['checkov_temp']])
+   def tempCheckovDir = "${projectDirectory}/checkov_temp"
+   sh "mkdir -p $tempCheckovDir"
    
-   // Copy the policies from the library to the temporary directory
-   sh "cp -r $externalCheckDir/* $tempCheckovDir/"
+   // Create symbolic links to the Checkov policies
+   sh "ln -s $externalCheckDir/* $tempCheckovDir/"
    
    checkovScan(projectDirectory, planFileJson, tempCheckovDir, customPolicy)
 }
