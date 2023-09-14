@@ -3,19 +3,18 @@ def call(Map params) {
     def planFileJson = params.planFileJson
     def customPolicy = params.customPolicy
 
-    // Define a temporary directory to copy the checkov policies
-    def tempCheckovDir = "${env.WORKSPACE}/temp_checkov_policies"
+    // Load the Python policy files from the shared library resources
+    def securityGroupPolicyContent = libraryResource('checkov_policy/SecurityGroupInboundCIDR.py').trim()
+    def initPolicyContent = libraryResource('checkov_policy/__init__.py').trim()
 
-    // Copy the checkov policies from the shared library resources to the temporary directory
-    sh "mkdir -p $tempCheckovDir"
-    libraryResource('checkov_policy').copyTo(tempCheckovDir)
+    // Write the policy contents to files in your workspace
+    writeFile file: "${env.WORKSPACE}/security_group_policy.py", text: securityGroupPolicyContent
+    writeFile file: "${env.WORKSPACE}/init_policy.py", text: initPolicyContent
 
-    // Run the checkovScan with the temporary checkov policies directory
-    checkovScan(projectDirectory, planFileJson, customPolicy, tempCheckovDir)
+    checkovScan(projectDirectory, planFileJson, customPolicy)
 }
 
-def checkovScan(project_dir, plan_file_json, custom_policy, checkov_policies_dir) {
-    // Use the absolute path to the temporary checkov policies directory
-    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks-dir $checkov_policies_dir --check $custom_policy --hard-fail-on $custom_policy"
+def checkovScan(project_dir, plan_file_json, custom_policy) {
+    def checkovScanCommand = "checkov -f $project_dir/$plan_file_json --external-checks $env.WORKSPACE --check $custom_policy --hard-fail-on $custom_policy"
     sh checkovScanCommand
 }
