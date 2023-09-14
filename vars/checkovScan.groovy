@@ -8,7 +8,7 @@ def call(Map params) {
 
     // Copy the checkov policies from the shared library resources to the temporary directory
     sh "mkdir -p $tempCheckovDir"
-    libraryResource('checkov_policies').copyTo(tempCheckovDir)
+    libraryResource('checkov_policy').copyTo(tempCheckovDir)
 
     // Run the checkovScan with the temporary checkov policies directory
     checkovScan(projectDirectory, planFileJson, customPolicy, tempCheckovDir)
