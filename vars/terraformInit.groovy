@@ -15,7 +15,7 @@ def terraformInit(project_dir, var_file, backend_key) {
           -backend-config="bucket=dcube-terraform-state" \\
           -backend-config="region=us-west-2" \\
           -backend-config="dynamodb_table=terraform-state-lock" \\
-          -var-file=../../vars/infra/dev/$var_file
+          -var-file=../../vars/infra/dev/${var_file}
       """
       
       // Execute the terraform init command
