@@ -4,7 +4,7 @@ def call(Map params) {
    terraformInit(projectDirectory)
 }
 
-def terraformInit(project_dir {
+def terraformInit(project_dir) {
    dir(project_dir) {
       def terraformInitCommand = """
         terraform init \\
