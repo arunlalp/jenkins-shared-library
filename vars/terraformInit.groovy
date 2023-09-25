@@ -11,7 +11,7 @@ def terraformInit(project_dir, var_file, backend_key) {
       // Construct the terraform init command with backend and variable configurations
       def terraformInitCommand = """
         terraform init \\
-          -backend-config="key=dev/$backend_key.tfstate" \\
+          -backend-config="key=dev/${backend_key}.tfstate" \\
           -backend-config="bucket=dcube-terraform-state" \\
           -backend-config="region=us-west-2" \\
           -backend-config="dynamodb_table=terraform-state-lock" \\
