@@ -7,14 +7,14 @@ def call(Map params) {
 
 def terraformInit(project_dir, var_file) {
    dir(project_dir, var_file) {
-      def terraformInitCommand = """
+      def terraformInitCommand = "
          terraform init \
          -backend-config="key=dev/vpc.tfstate" \
          -backend-config="bucket=dcube-terraform-state" \
          -backend-config="region=us-west-2" \
          -backend-config="dynamodb_table=terraform-state-lock" \
          -var-file=../../vars/infra/dev/${var_file}
-      """
+      "
       sh terraformInitCommand.trim()
    }
 }
