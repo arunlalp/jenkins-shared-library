@@ -2,7 +2,7 @@ def call(Map params) {
    def projectDirectory = params.projectDirectory
    def variableFile = params.variableFile
 
-   terraformInit(projectDirectory, variableFile,)
+   terraformInit(projectDirectory, variableFile)
 }
 
 def terraformInit(project_dir, var_file) {
