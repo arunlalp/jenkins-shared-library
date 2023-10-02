@@ -8,5 +8,3 @@ def call(Map config = [:]) {
         userRemoteConfigs: [[url: gitUrl]]
     ])
 }
-
-

@@ -10,7 +10,7 @@ def call(Map params) {
 
 def terraformPlan(project_dir, var_file, plan_file) {
    dir(project_dir) {
-      def terraformPlanCommand = "terraform plan -var-file=../../../vars/dev/$var_file -out $plan_file"
+      def terraformPlanCommand = "terraform plan -var-file=../../vars/infra/dev/$var_file -out $plan_file"
       sh terraformPlanCommand
    }   
 }
@@ -21,5 +21,3 @@ def terraformShow(project_dir, plan_file, redir_plan_file) {
       sh terraformShowCommand
    }   
 }
-
-

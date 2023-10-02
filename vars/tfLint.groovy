@@ -14,7 +14,7 @@ def tfLint(project_dir, tflintConfig, tfvarsFile) {
       writeFile file: '.tflint.hcl', text: tflintConfig.replace('var.tfvars_file', '"' + tfvarsFile + '"')
 
       def tfInitCommand = 'tflint --init'
-      def tfLintCommand = 'tflint --disable-rule=terraform_required_version --disable-rule=terraform_required_providers'
+      def tfLintCommand = 'tflint'
       sh tfInitCommand
       sh tfLintCommand
    }   

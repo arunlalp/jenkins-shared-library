@@ -61,8 +61,8 @@
       <td id="build_number">${BUILD_NUMBER}</td>
     </tr>
     <tr>
-      <td>Project_Name</td>
-      <td id="project_name">${PROJECT_NAME}</td>
+      <td>Job_Name</td>
+      <td id="job_name">${JOB_NAME}</td>
     </tr>
     <tr>
       <td>Build_URL</td>

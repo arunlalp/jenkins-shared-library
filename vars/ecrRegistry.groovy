@@ -1,21 +1,21 @@
 def call(Map params) {
   def ecrRepository = params.ecrRepository 
   def imageName = params.imageName 
-  def imageTag = params.imageTag 
+  def versionTag = params.versionTag 
   def awsRegion = params.awsRegion
   
   ecrLogin(ecrRepository, awsRegion)
-  dockerTagAndPush(imageName, ecrRepository, imageTag,)
+  dockerTagAndPush(imageName, ecrRepository, versionTag)
 }
 
-def ecrLogin(repository, region) {
-  def ecrLoginCommand = "aws ecr-public get-login-password --region $region | docker login --username AWS --password-stdin $repository"
+def ecrLogin(ecrRepository, awsRegion) {
+  def ecrLoginCommand = "aws ecr get-login-password --region $awsRegion | docker login --username AWS --password-stdin $ecrRepository"
   sh ecrLoginCommand
 }
 
-def dockerTagAndPush(imageName, repository, imageTag) {
-  def sourceImage = "$imageName:$imageTag"
-  def targetImage = "$repository/$imageName:$imageTag"
+def dockerTagAndPush(imageName, ecrRepository, versionTag) {
+  def sourceImage = "$imageName:$versionTag"
+  def targetImage = "$ecrRepository:$imageName-$versionTag"
 
   def dockerTagCommand = "docker tag $sourceImage $targetImage"
   def dockerPushCommand = "docker push $targetImage"
